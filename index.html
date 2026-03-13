@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Citação do dia</title>
+</head>
+<body>
+  <h1>Citação</h1>
+
+  <blockquote id="citacao">Carregando...</blockquote>
+  <p id="autor"></p>
+
+  <button id="btn">Mostrar outra citação</button>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    const SUPABASE_URL = "https://vpishybqzeflcvkdbhlq.supabase.co";
+    const SUPABASE_KEY = "sb_publishable_kWSkLBhVi1O0IKljgdko_A_Io1YFJr1";
+
+    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    const citacaoEl = document.getElementById("citacao");
+    const autorEl = document.getElementById("autor");
+    const btn = document.getElementById("btn");
+
+    async function carregarCitacao() {
+      citacaoEl.textContent = "Carregando...";
+      autorEl.textContent = "";
+
+      const { data, error } = await supabaseClient.rpc("obter_citacao_aleatoria");
+
+      if (error) {
+        citacaoEl.textContent = "Erro ao carregar citação.";
+        autorEl.textContent = error.message;
+        return;
+      }
+
+      if (!data || data.length === 0) {
+        citacaoEl.textContent = "Nenhuma citação encontrada.";
+        return;
+      }
+
+      citacaoEl.textContent = data[0].texto;
+      autorEl.textContent = data[0].autor ? "— " + data[0].autor : "";
+    }
+
+    btn.addEventListener("click", carregarCitacao);
+
+    carregarCitacao();
+  </script>
+</body>
+</html>
