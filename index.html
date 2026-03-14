@@ -1,53 +1,90 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Citação sobre Música</title>
+<meta charset="UTF-8">
+<title>Citação sobre Música</title>
+
+<style>
+body{
+    font-family: Arial, sans-serif;
+    text-align: center;
+    padding: 40px;
+}
+
+blockquote{
+    font-size: 24px;
+    margin: 30px auto;
+    max-width: 600px;
+}
+
+#autor{
+    font-style: italic;
+    margin-bottom: 30px;
+}
+
+button{
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+}
+</style>
+
 </head>
+
 <body>
-  <h1>Citação</h1>
 
-  <blockquote id="citacoes_musica">Carregando...</blockquote>
-  <p id="autor"></p>
+<h1>Citação sobre Música</h1>
 
-  <button id="btn">Mostrar outra citação</button>
+<blockquote id="citacao">
+Carregando citação...
+</blockquote>
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script>
-    const SUPABASE_URL = "https://vpishybqzeflcvkdbhlq.supabase.co";
-    const SUPABASE_KEY = "sb_publishable_kWSkLBhVi1O0IKljgdko_A_Io1YFJr1";
+<p id="autor"></p>
 
-    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+<button id="nova">Nova citação</button>
 
-    const citacaoEl = document.getElementById("citacoes_musica");
-    const autorEl = document.getElementById("autor");
-    const btn = document.getElementById("btn");
 
-    async function carregarCitacao() {
-      citacaoEl.textContent = "Carregando...";
-      autorEl.textContent = "";
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-      const { data, error } = await supabaseClient.rpc("obter_citacao_aleatoria");
+<script>
 
-      if (error) {
-        citacaoEl.textContent = "Erro ao carregar citação.";
-        autorEl.textContent = error.message;
-        return;
-      }
+// COLOQUE AQUI OS DADOS DO SEU PROJETO
+const SUPABASE_URL = "https://vpishybqzeflcvkdbhlq.supabase.co"
+const SUPABASE_KEY = "sb_publishable_kWSkLBhVi1O0IKljgdko_A_Io1YFJr1"
 
-      if (!data || data.length === 0) {
-        citacaoEl.textContent = "Nenhuma citação encontrada.";
-        return;
-      }
+// conecta ao supabase
+const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY)
 
-      citacaoEl.textContent = data[0].texto;
-      autorEl.textContent = data[0].autor ? "— " + data[0].autor : "";
+// elementos do html
+const citacaoEl = document.getElementById("citacao")
+const autorEl = document.getElementById("autor")
+const botao = document.getElementById("nova")
+
+// função que busca citação
+async function carregarCitacao() {
+
+    citacaoEl.textContent = "Carregando..."
+    autorEl.textContent = ""
+
+    const { data, error } = await supabaseClient.rpc("obter_citacao_musical_aleatoria")
+
+    if(error){
+        citacaoEl.textContent = "Erro ao carregar citação"
+        console.log(error)
+        return
     }
 
-    btn.addEventListener("click", carregarCitacao);
+    citacaoEl.textContent = data[0].texto
+    autorEl.textContent = "— " + data[0].autor
+}
 
-    carregarCitacao();
-  </script>
+// botão para nova citação
+botao.addEventListener("click", carregarCitacao)
+
+// carregar primeira citação ao abrir página
+carregarCitacao()
+
+</script>
+
 </body>
 </html>
