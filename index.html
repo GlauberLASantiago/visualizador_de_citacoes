@@ -3,21 +3,15 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Citação por categoria</title>
+  <title>Citação sobre Música</title>
 </head>
 <body>
-  <h1>Citação por categoria</h1>
+  <h1>Citação</h1>
 
-  <select id="categoria">
-    <option value="musica">Música</option>
-    <option value="educacao">Educação</option>
-    <option value="tecnologia">Tecnologia</option>
-  </select>
-
-  <button id="btn">Buscar citação</button>
-
-  <blockquote id="citacao">Escolha uma categoria.</blockquote>
+  <blockquote id="citacao">Carregando...</blockquote>
   <p id="autor"></p>
+
+  <button id="btn">Mostrar outra citação</button>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
@@ -26,27 +20,24 @@
 
     const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    const categoriaEl = document.getElementById("categoria");
-    const citacaoEl = document.getElementById("citacao");
+    const citacaoEl = document.getElementById("citacao_musica");
     const autorEl = document.getElementById("autor");
     const btn = document.getElementById("btn");
 
     async function carregarCitacao() {
-      const categoria = categoriaEl.value;
+      citacaoEl.textContent = "Carregando...";
+      autorEl.textContent = "";
 
-      const { data, error } = await supabaseClient.rpc("obter_citacao_por_categoria", {
-        categoria_escolhida: categoria
-      });
+      const { data, error } = await supabaseClient.rpc("obter_citacao_aleatoria");
 
       if (error) {
-        citacaoEl.textContent = "Erro ao carregar.";
+        citacaoEl.textContent = "Erro ao carregar citação.";
         autorEl.textContent = error.message;
         return;
       }
 
       if (!data || data.length === 0) {
-        citacaoEl.textContent = "Nenhuma citação encontrada nessa categoria.";
-        autorEl.textContent = "";
+        citacaoEl.textContent = "Nenhuma citação encontrada.";
         return;
       }
 
@@ -55,6 +46,8 @@
     }
 
     btn.addEventListener("click", carregarCitacao);
+
+    carregarCitacao();
   </script>
 </body>
 </html>
