@@ -1,6 +1,8 @@
 <!DOCTYPE html>
+
 <html lang="pt-BR">
 <head>
+
 <meta charset="UTF-8">
 <title>Citação sobre Música</title>
 
@@ -43,25 +45,24 @@ Carregando citação...
 
 <button id="nova">Nova citação</button>
 
-
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
 
-// COLOQUE AQUI OS DADOS DO SEU PROJETO
+// DADOS DO PROJETO
 const SUPABASE_URL = "https://vpishybqzeflcvkdbhlq.supabase.co"
 const SUPABASE_KEY = "sb_publishable_kWSkLBhVi1O0IKljgdko_A_Io1YFJr1"
 
-// conecta ao supabase
+// conecta ao Supabase
 const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY)
 
-// elementos do html
+// elementos do HTML
 const citacaoEl = document.getElementById("citacoes")
 const autorEl = document.getElementById("autor")
 const botao = document.getElementById("nova")
 
 // função que busca citação
-async function carregarCitacao() {
+async function carregarCitacao(){
 
     citacaoEl.textContent = "Carregando..."
     autorEl.textContent = ""
@@ -70,18 +71,23 @@ async function carregarCitacao() {
 
     if(error){
         citacaoEl.textContent = "Erro ao carregar citação"
-        console.log(error)
+        console.error(error)
+        return
+    }
+
+    if(!data || data.length === 0){
+        citacaoEl.textContent = "Nenhuma citação encontrada"
         return
     }
 
     citacaoEl.textContent = data[0].texto
-    autorEl.textContent = "— " + data[0].autor
+    autorEl.textContent = data[0].autor ? "— " + data[0].autor : ""
 }
 
 // botão para nova citação
 botao.addEventListener("click", carregarCitacao)
 
-// carregar primeira citação ao abrir página
+// carregar primeira citação
 carregarCitacao()
 
 </script>
