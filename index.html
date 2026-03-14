@@ -7,6 +7,7 @@
 <title>Citação sobre Música</title>
 
 <style>
+
 body{
     font-family: Arial, sans-serif;
     text-align: center;
@@ -29,6 +30,7 @@ button{
     font-size: 16px;
     cursor: pointer;
 }
+
 </style>
 
 </head>
@@ -37,7 +39,7 @@ button{
 
 <h1>Citação sobre Música</h1>
 
-<blockquote id="citacoes_musica">
+<blockquote id="citacao">
 Carregando citação...
 </blockquote>
 
@@ -49,19 +51,15 @@ Carregando citação...
 
 <script>
 
-// DADOS DO PROJETO
 const SUPABASE_URL = "https://vpishybqzeflcvkdbhlq.supabase.co"
 const SUPABASE_KEY = "sb_publishable_kWSkLBhVi1O0IKljgdko_A_Io1YFJr1"
 
-// conecta ao Supabase
 const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY)
 
-// elementos do HTML
-const citacaoEl = document.getElementById("citacoes_musica")
+const citacaoEl = document.getElementById("citacao")
 const autorEl = document.getElementById("autor")
 const botao = document.getElementById("nova")
 
-// função que busca citação
 async function carregarCitacao(){
 
     citacaoEl.textContent = "Carregando..."
@@ -80,14 +78,14 @@ async function carregarCitacao(){
         return
     }
 
-    citacaoEl.textContent = data[0].texto
-    autorEl.textContent = data[0].autor ? "— " + data[0].autor : ""
+    const citacao = data[0]
+
+    citacaoEl.textContent = citacao.texto || "Sem texto"
+    autorEl.textContent = citacao.autor ? "— " + citacao.autor : ""
 }
 
-// botão para nova citação
 botao.addEventListener("click", carregarCitacao)
 
-// carregar primeira citação
 carregarCitacao()
 
 </script>
